@@ -52,7 +52,7 @@ lib/
     │   ├── routes.dart       # Route definitions
     │   ├── screens.dart      # Screen dimensions
     │   ├── themes.dart       # App themes
-    │   └── toast.dart        # Toast utilities
+    │   └── toast.dart        # Toast utilities (Now uses native SnackBar)
     │
     ├── data/                 # Data Layer
     │   ├── datasource/       # Data sources (API, Local)
@@ -269,6 +269,36 @@ GoRouter routerinit = GoRouter(
 );
 ```
 
+### **5. Updated Toast Implementation**
+
+**Native SnackBar Integration:**
+- Replaced fluttertoast with Flutter's built-in SnackBar
+- Better performance and no external dependencies
+- Consistent with Material Design guidelines
+
+```dart
+void showToast({
+  required String msg,
+  Color? backgroundColor,
+  Color? textColor,
+  BuildContext? context,
+}) {
+  if (context == null) {
+    print('Toast: $msg');
+    return;
+  }
+  
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(msg, style: TextStyle(color: textColor ?? Colors.white)),
+      duration: const Duration(seconds: 2),
+      backgroundColor: backgroundColor ?? ColorLight.primary,
+      behavior: SnackBarBehavior.floating,
+    ),
+  );
+}
+```
+
 ## 🎯 Benefits of This Architecture
 
 ### **1. Separation of Concerns**
@@ -293,6 +323,14 @@ GoRouter routerinit = GoRouter(
 
 ## 🚀 Getting Started
 
+### **Prerequisites**
+- **Flutter SDK**: `>=3.4.0 <4.0.0`
+- **Dart SDK**: Compatible with Flutter version
+- **Android Studio**: Latest version with SDK tools
+- **Java**: OpenJDK 21 (for Android development)
+
+### **Setup Steps**
+
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
@@ -301,18 +339,25 @@ GoRouter routerinit = GoRouter(
 
 2. **Install dependencies**
    ```bash
-    flutter pub get
+   flutter pub get
    ```
 
 3. **Generate code** (for Freezed)
    ```bash
-   flutter packages pub run build_runner build
+   flutter packages pub run build_runner build --delete-conflicting-outputs
    ```
 
 4. **Run the application**
    ```bash
    flutter run
    ```
+
+### **Android Setup**
+The project uses the latest Android build tools:
+- **Android Gradle Plugin**: 8.6.0
+- **Kotlin**: 2.1.0
+- **Gradle**: 8.7
+- **Target SDK**: 36
 
 ## 📱 Features Implemented
 
@@ -326,6 +371,8 @@ GoRouter routerinit = GoRouter(
 - ✅ **Logging** (Structured logging)
 - ✅ **Form Validation**
 - ✅ **Loading States**
+- ✅ **Native Toast Notifications**
+- ✅ **Latest Android Build Tools**
 
 ## 🧪 Testing
 
@@ -337,37 +384,72 @@ The project includes testing setup with:
 ## 📚 Dependencies
 
 ### **Core Dependencies**
-- `flutter_bloc` - State management
-- `get_it` - Dependency injection
-- `freezed` - Code generation
-- `dio` - HTTP client
-- `go_router` - Navigation
-- `dartz` - Functional programming
-- `shared_preferences` - Local storage
+- `flutter_bloc` ^8.1.6 - State management
+- `get_it` ^7.7.0 - Dependency injection
+- `freezed_annotation` ^2.4.4 - Code generation
+- `dio` ^5.9.0 - HTTP client
+- `go_router` ^13.2.5 - Navigation
+- `dartz` ^0.10.1 - Functional programming
+- `shared_preferences` ^2.5.3 - Local storage
 
 ### **UI Dependencies**
-- `google_fonts` - Typography
-- `flutter_spinkit` - Loading indicators
-- `font_awesome_flutter` - Icons
-- `fluttertoast` - Toast messages
+- `google_fonts` ^6.3.0 - Typography
+- `flutter_spinkit` ^5.2.2 - Loading indicators
+- `font_awesome_flutter` ^10.9.0 - Icons
+- **Removed**: `fluttertoast` (replaced with native SnackBar)
 
 ### **Development Dependencies**
-- `very_good_analysis` - Linting
-- `build_runner` - Code generation
-- `bloc_test` - BLoC testing
-- `mocktail` - Mocking
+- `very_good_analysis` ^3.1.0 - Linting
+- `build_runner` ^2.7.0 - Code generation
+- `bloc_test` ^9.1.7 - BLoC testing
+- `mocktail` ^0.3.0 - Mocking
 
 ## 🔧 Configuration
 
 ### **Environment Setup**
-- Flutter SDK: `>=3.0.6 <4.0.0`
-- Dart SDK: Compatible with Flutter version
+- **Flutter SDK**: `>=3.4.0 <4.0.0`
+- **Dart SDK**: Compatible with Flutter version
+- **Android SDK**: Version 36.0.0
+- **Java**: OpenJDK 21
+
+### **Android Build Configuration**
+```gradle
+// android/build.gradle
+buildscript {
+    ext.kotlin_version = '2.1.0'
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.6.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+// android/gradle/wrapper/gradle-wrapper.properties
+distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-all.zip
+```
 
 ### **Code Generation**
 Run this command whenever you modify Freezed classes:
 ```bash
 flutter packages pub run build_runner build --delete-conflicting-outputs
 ```
+
+## 🔄 Recent Changes
+
+### **Build System Improvements**
+- ✅ **Android Gradle Plugin**: 8.6.0
+- ✅ **Kotlin**: 2.1.0
+- ✅ **Gradle**: 8.7
+- ✅ **Dart SDK**: >=3.4.0
+
+### **Dependency Improvements**
+- ✅ **79 dependencies upgraded** to latest compatible versions
+- ✅ **Removed fluttertoast** dependency (replaced with native SnackBar)
+- ✅ **All core packages** upgraded to latest stable versions
+
+### **Bug Fixes**
+- ✅ **Fixed MainActivity namespace issue** in AndroidManifest.xml
+- ✅ **Resolved fluttertoast compatibility** with newer AGP versions
+- ✅ **Toast implementation** now uses native Flutter SnackBar
 
 ## 🤝 Contributing
 
